@@ -22,9 +22,16 @@ class MovieView(Resource):
                                             Genre.name.label('genre'), Director.name.label('director')).join(
             Genre).join(Director)
 
-        if 'director_id' in request.args:
-            did = request.args.get('director_id')
-            good_movie_query = good_movie_query.filter(Movie.director_id == did)
+        director_id = request.args.get('director_id')
+        genre_id = request.args.get('genre_id')
+        if director_id:
+            good_movie_query = good_movie_query.filter(Movie.director_id == director_id)
+        if genre_id:
+            good_movie_query = good_movie_query.filter(Movie.genre_id == genre_id)
+
+
+
+
 
         all_movies = good_movie_query.all()
         return movies_schema.dump(all_movies), 200
